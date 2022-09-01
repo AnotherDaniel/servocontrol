@@ -1,6 +1,11 @@
-# servocontrol
+# servocontrol for a simple robot arm
 
-Playground for fooling around with a self-made robot arm
+Playground for fooling around with a self-made robot arm (e.g. https://www.instructables.com/EEZYbotARM-Mk2-3D-Printed-Robot/)
 
-This is purely a sketch pad at this time - trying to get these cheap servos to work that I bought. Ugly hacks, no real design, and I never really used Python before.
-I might have to buy different servos... ;-)
+Ground-breaking features include:
+
+- development-mock of pigpio library
+- convenient servo properties/interaction encapsulation
+- separated-out servo properties definition
+- mechanism for ramp-up and slow-down of servo actuation when driving to new position
+- servo position range abstraction (can use raw setpoint or 0-100 position range)
