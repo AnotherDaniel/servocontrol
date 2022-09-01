@@ -9,3 +9,4 @@ Ground-breaking features include:
 - separated-out servo properties definition
 - mechanism for ramp-up and slow-down of servo actuation when driving to new position
 - servo position range abstraction (can use raw setpoint or 0-100 position range)
+- pre-defined robot arm positions

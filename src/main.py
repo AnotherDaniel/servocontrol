@@ -8,29 +8,6 @@ shoulder = None
 elbow = None
 hand = None
 
-def main():
-    global turn
-    global shoulder
-    global elbow
-    global hand
-
-    turn = sc.servocontrol( **sd.turn )
-    shoulder = sc.servocontrol( **sd.shoulder )
-    elbow = sc.servocontrol( **sd.elbow )
-    hand = sc.servocontrol( **sd.hand )
-
-    # do stuff here
-    turn.drive_to( 44 )
-    report_pos()
-
-    drive_to_pos( **sd.pos_home )
-    report_pos()
-
-    del turn
-    del shoulder
-    del elbow
-    del hand
-
 def drive_to_pos( turn_target, shoulder_target, elbow_target, hand_target ):
     global turn
     global shoulder
@@ -50,7 +27,32 @@ def report_pos():
                 " - shoulder:" + str(shoulder.get_position()) +
                 " - elbow:" + str(elbow.get_position()) +
                 " - hand:" + str(hand.get_position()) )
+
+def main():
+    global turn
+    global shoulder
+    global elbow
+    global hand
     
+    # initialization
+    turn = sc.servocontrol( **sd.turn )
+    shoulder = sc.servocontrol( **sd.shoulder )
+    elbow = sc.servocontrol( **sd.elbow )
+    hand = sc.servocontrol( **sd.hand )
+
+    # do stuff here
+    turn.drive_to( 44 )
+    report_pos()
+
+    drive_to_pos( **sd.pos_home )
+    report_pos()
+
+    # cleanup
+    del turn
+    del shoulder
+    del elbow
+    del hand
+
 if __name__ == '__main__':
     import logging.config
     logging.basicConfig( level = logging.INFO )
