@@ -10,3 +10,11 @@ Ground-breaking features include:
 - mechanism for ramp-up and slow-down of servo actuation when driving to new position
 - servo position range abstraction (can use raw setpoint or 0-100 position range)
 - pre-defined robot arm positions
+
+---
+
+## ToDos
+
+- make ramp-up/-down timings configurable (per servo)
+- add armcontrol class, to unify entire-robot control ans positioning
+- include threading in armcontrol, so that multiple servos can be actuated in parallel
