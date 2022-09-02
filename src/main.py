@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import servocontrol as sc
 import servodefs as sd
+import time
 import logging
 
 turn = None
@@ -41,8 +42,21 @@ def main():
     hand = sc.servocontrol( **sd.hand )
 
     # do stuff here
-    turn.drive_to( 44 )
+    turn.drive_to( 10 )
     report_pos()
+    time.sleep( 2 )
+
+    drive_to_pos( **sd.pos_home )
+    report_pos()
+    time.sleep( 2 )
+
+    drive_to_pos( 80, 90, 10, 70 )
+    report_pos()
+    time.sleep( 2 )
+
+    hand.drive_to( 100 )
+    report_pos()
+    time.sleep( 2 )
 
     drive_to_pos( **sd.pos_home )
     report_pos()
