@@ -13,11 +13,9 @@ def main():
     
     arm.report_pos()
 
-    arm.drive_to( "elbow", 90 )
+    arm.drive_to( "elbow", 5 )
     arm.report_pos()
 
-    arm.drive_to_pos( sd.pos_home )
-    arm.report_pos()
 
 
 if __name__ == '__main__':

@@ -1,0 +1,11 @@
+{
+    "cSpell.ignoreWords": [
+        "Ybot",
+        "armcontrol",
+        "pigpio",
+        "servocontrol"
+    ],
+    "cSpell.words": [
+        "setpoint"
+    ]
+}

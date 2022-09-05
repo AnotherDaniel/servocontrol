@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 #import pigpio as pigpio
+from tracemalloc import start
 import mockpig as pigpio
 import time
 import logging
@@ -9,8 +10,12 @@ logger = logging.getLogger(__name__)
 # Absolute min - max limits for what we allow in actuation
 MIN = 500
 MAX = 2500
+
+# Timing-related definions - STARTDELAY and MINDELAY influence movment start/end and max-speeds, 
+# ALACRITY is a value that influences how these speeds are interpreted (higher value = faster movement )
 STARTDELAY = 275
 MINDELAY = 50
+ALACRITY = 20000
 
 pwm = pigpio.pi()
 
@@ -22,10 +27,12 @@ class servocontrol:
     min = MIN
     max = MAX
     startdelay = STARTDELAY
-    mindelay = MINDELAY
+    mindelay_cw = MINDELAY
+    mindelay_ccw = MINDELAY
+    
     position = None
  
-    def __init__( self, name, pin, min, max, initial, startdelay=STARTDELAY, mindelay=MINDELAY ):
+    def __init__( self, name, pin, min, max, initial, startdelay=STARTDELAY, mindelay_cw=MINDELAY, mindelay_ccw=MINDELAY ):
         """ Create servo abstraction, providing the following properties:
             - name: name or servo/axis
             - pin: Raspberry GPIO pin that servo is controlled by
@@ -33,12 +40,15 @@ class servocontrol:
             - max: maximum pigpio-style PWM threshold (1500 is a good start value if you don't know better)
             - initial: initial servo position for initialization
             - startdelay: start speed for servo actuation
-            - mindelay: max speed during servo actuation 
+            - mindelay_cw: max speed during servo actuation for clock-wise turns 
+            - mindelay_ccw: max speed during servo actuation for counter-clock-wise turns
         """
 
         # Sanity check - Raspberry Pi only has GPIO pins between 2 - 27 
         assert pin >= 2 and pin <= 27
         assert max > min
+        assert min <= initial and initial <= max
+        assert mindelay_cw < startdelay and mindelay_ccw < startdelay
 
         self.name = name
         self.pin = pin
@@ -46,7 +56,8 @@ class servocontrol:
         self.max = max
         self.position = initial
         self.startdelay = startdelay
-        self.mindelay = mindelay
+        self.mindelay_cw = mindelay_cw
+        self.mindelay_ccw = mindelay_ccw
 
         global pwm
         pwm.set_mode( self.pin, pigpio.OUTPUT )
@@ -77,7 +88,8 @@ class servocontrol:
         return int(pos/step)
  
     def drive_to_raw( self, target ):
-        """ 'target' parameter is raw pwm value as expected by pigpio library """
+        """ Argument 'target' is raw pwm value as expected by pigpio library """
+
         # Motivation for this function is to have a ramped speed-up and slow-down for servo actuation
         global pwm
         global MIN
@@ -87,31 +99,41 @@ class servocontrol:
 
         logging.debug( "[servocontrol] call to drive_to( " + str(self.name) + ", " + str(target) + " )" )
 
+        decel = None
+        mindelay = None
         delta = 0
-        delay = self.startdelay
-        decel = self.startdelay - self.mindelay
 
         # This is to address both right-turn and left-turn cases with one loop (below)
         if target > self.position:
             delta = 1
+            mindelay = self.mindelay_cw
         elif target < self.position:
             delta = -1
+            mindelay = self.mindelay_ccw
         else:
             return
 
+        # delay is the current-loop-iteration delay between PWM actuations,
+        delay = self.startdelay
+
         while (delta > 0 and self.position < target) or (delta < 0 and self.position > target):
             self.position += delta
-            pwm.set_servo_pulsewidth( self.pin, self.position );
-            time.sleep( delay/200000 )
+            pwm.set_servo_pulsewidth( self.pin, self.position )
+            time.sleep( delay/ALACRITY )
 
-            # abs(target-position) > decel  is to compute slowdown-point regardless of turn direction
-            if delay > self.mindelay and abs(target-self.position) > decel:
+            # decel is the number of loops (increments/decrements) needed to get from start/end-delay to minimum delay
+            decel = self.startdelay - max( delay, mindelay )
+
+            # abs(target-position) is the delta (number of loop iterations remaining) to target position
+            if delay > mindelay and abs(target-self.position) > decel:
                 delay -= 1
             elif delay < self.startdelay and abs(target-self.position) < decel:
                 delay += 1
 
+            print( str(self.position) + " <> " + str(delay)  )
+
     def drive_to( self, target ):
-        """ 'target' parameter is a position value between 0 - 100 """
+        """ Argument 'target' is a position value between 0 - 100 """
         assert target >= 0 and target <= 100
         range = self.max - self.min
         step = range/100

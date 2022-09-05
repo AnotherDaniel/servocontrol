@@ -1,6 +1,6 @@
 # servocontrol for a simple robot arm
 
-Playground for fooling around with a self-made robot arm (e.g. https://www.instructables.com/EEZYbotARM-Mk2-3D-Printed-Robot/)
+Playground for fooling around with a self-made robot arm (e.g. [the EEZYbotARM Mk2](https://www.instructables.com/EEZYbotARM-Mk2-3D-Printed-Robot/))
 
 Ground-breaking features include:
 
