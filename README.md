@@ -17,6 +17,5 @@ Ground-breaking features include:
 
 ## ToDos
 
-- make ramp-up/-down timings configurable (per servo)
-- add armcontrol class, to unify entire-robot control ans positioning
-- include threading in armcontrol, so that multiple servos can be actuated in parallel
+- make ramp-up/-down timings configurable (per servo) - and might we need different ramps/speeds per direction (where gravity plays a role in up/down movements)?
+- add threading to armcontrol, so that multiple servos can be actuated in parallel

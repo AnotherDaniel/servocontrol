@@ -11,6 +11,8 @@ logger = logging.getLogger(__name__)
 # Absolute min - max limits for what we allow in actuation
 MIN = 500
 MAX = 2500
+STARTDELAY = 275
+MINDELAY = 50
 
 pwm = pigpio.pi()
 
@@ -19,9 +21,11 @@ class servocontrol:
     pin = None
     min = None
     max = None
+    startdelay = STARTDELAY
+    mindelay = MINDELAY
     position = None
  
-    def __init__( self, name, pin, min, max, initial ):
+    def __init__( self, name, pin, min, max, initial, startdelay=STARTDELAY, mindelay=MINDELAY ):
         assert pin >= 2 and pin <= 27
         assert max > min
 
@@ -30,11 +34,18 @@ class servocontrol:
         self.min = min
         self.max = max
         self.position = initial
+        self.startdelay = startdelay
+        self.mindelay = mindelay
 
         global pwm
         pwm.set_mode( self.pin, pigpio.OUTPUT )
         pwm.set_PWM_frequency( self.pin, 50 )
         self.drive_to_raw( self.position )
+
+    def __del__( self ):
+        global pwm
+        pwm.set_PWM_dutycycle( self.pin, 0 )
+        pwm.set_PWM_frequency( self.pin, 0 )
 
     def get_name( self ):
         assert self.name is not None
@@ -65,10 +76,8 @@ class servocontrol:
         logging.debug( "[servocontrol] call to drive_to( " + str(self.name) + ", " + str(target) + " )" )
 
         delta = 0
-        startdelay = 275
-        mindelay = 50
-        delay = startdelay
-        decel = startdelay-mindelay
+        delay = self.startdelay
+        decel = self.startdelay - self.mindelay
 
         # This is to address both right-turn and left-turn cases with one loop (below)
         if target > self.position:
@@ -78,15 +87,18 @@ class servocontrol:
         else:
             return
 
-        while self.position != target:
+        while (delta > 0 and self.position < target) or (delta < 0 and self.position > target):
+#            if (delta > 0 and self.position >= target) or (delta < 0 and self.position <= target):
+#                break
+
             self.position += delta
             pwm.set_servo_pulsewidth( self.pin, self.position );
             time.sleep( delay/200000 )
 
             # abs(target-position) > decel  is to compute slowdown-point regardless of turn direction
-            if delay > mindelay and abs(target-self.position) > decel:
+            if delay > self.mindelay and abs(target-self.position) > decel:
                 delay -= 1
-            elif delay < startdelay and abs(target-self.position) < decel:
+            elif delay < self.startdelay and abs(target-self.position) < decel:
                 delay += 1
 
     def drive_to( self, target ):
@@ -96,8 +108,3 @@ class servocontrol:
         step = range/100
         delta = step*target
         self.drive_to_raw( self.min + delta )
-
-    def __del__( self ):
-        global pwm
-        pwm.set_PWM_dutycycle( self.pin, 0 )
-        pwm.set_PWM_frequency( self.pin, 0 )

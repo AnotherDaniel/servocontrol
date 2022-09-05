@@ -8,4 +8,4 @@ hand = { 'name': 'hand', 'pin': 20, 'min': 625, 'max': 1500, 'initial': 625 }
 
 
 # Set of pre-defined standard positions
-pos_home = { 'turn_target': 50, 'shoulder_target': 50, 'elbow_target': 50, 'hand_target': 0 }
+pos_home = { 'turn': 50, 'shoulder': 50, 'elbow': 50, 'hand': 0 }
