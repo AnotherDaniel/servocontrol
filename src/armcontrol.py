@@ -1,17 +1,18 @@
 #!/usr/bin/python3
-
 import servocontrol as sc
 import time
 import logging
 logger = logging.getLogger(__name__)
 
 class armcontrol:
+    """ Abstraction for an entire robot arm, handling all axis' servos and providing some convenience functions, 
+        e.g. for https://www.instructables.com/EEZYbotARM-Mk2-3D-Printed-Robot/ """
+    
     # list of servocontrol references
     servocontrols = []
 
     def __init__( self, servos = [] ):
-        # add servo configs as list of servodef-style dicts
-        
+        """ Add servo configs as list of servodef-style servo dictionaries """
         if len( servos ) > 0:
             for servo in servos:
                 self.add_servo( servo )
@@ -21,21 +22,25 @@ class armcontrol:
             del servo
 
     def add_servo( self, servo ):
+        """ Add one servo as servodef-style servo dictionary """
         self.servocontrols.append( { servo['name']: sc.servocontrol( **servo ) } )
 
     def drive_to( self, servo_name, target ):
+        """ Drive servo_name axis to position target (movement range value between 0-100) """
         for sc in self.servocontrols:
             if servo_name in sc:
                 sc[servo_name].drive_to( target )
                 pass
 
     def drive_to_pos( self, position = {} ):
+        """ Drive robot arm to position, individual axis targets provided by servodef-style position dictionary """
         for key, pos in position.items():
             for sc in self.servocontrols:
                 if key in sc:
                     sc[key].drive_to( pos )
 
     def report_pos( self ):
+        """ Print current robot arm axis positions to logger.info (movement range value between 0-100) """
         for sc in self.servocontrols:
             for servo in sc:
                 logging.info( "" + servo + ":" + str( sc[servo].get_position() ) )

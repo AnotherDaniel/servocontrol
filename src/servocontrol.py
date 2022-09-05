@@ -1,6 +1,4 @@
 #!/usr/bin/python3
-# Helper module that encapsulates servo properties and pigpiod interaction for manipulating a robot arm
-# (e.g. https://www.instructables.com/EEZYbotARM-Mk2-3D-Printed-Robot/)
 
 #import pigpio as pigpio
 import mockpig as pigpio
@@ -17,15 +15,28 @@ MINDELAY = 50
 pwm = pigpio.pi()
 
 class servocontrol:
+    """ Encapsulate servo properties and pigpiod interaction for controlling RC-style servos """
+
     name = None
     pin = None
-    min = None
-    max = None
+    min = MIN
+    max = MAX
     startdelay = STARTDELAY
     mindelay = MINDELAY
     position = None
  
     def __init__( self, name, pin, min, max, initial, startdelay=STARTDELAY, mindelay=MINDELAY ):
+        """ Create servo abstraction, providing the following properties:
+            - name: name or servo/axis
+            - pin: Raspberry GPIO pin that servo is controlled by
+            - min: minimum pigpio-style PWM threshold (500 is a good start value if you don't know better)
+            - max: maximum pigpio-style PWM threshold (1500 is a good start value if you don't know better)
+            - initial: initial servo position for initialization
+            - startdelay: start speed for servo actuation
+            - mindelay: max speed during servo actuation 
+        """
+
+        # Sanity check - Raspberry Pi only has GPIO pins between 2 - 27 
         assert pin >= 2 and pin <= 27
         assert max > min
 
@@ -48,16 +59,17 @@ class servocontrol:
         pwm.set_PWM_frequency( self.pin, 0 )
 
     def get_name( self ):
+        """ Name of servo/axis """
         assert self.name is not None
         return self.name
 
     def get_position_raw( self ):
-        # Returns current position as raw pwm value as dealt with by pigpio library
+        """ Current position as raw PWM value as dealt with by pigpio library """
         assert self.position is not None
         return self.position
 
     def get_position( self ):
-        # Returns current position as value between 0 - 100 
+        """ Returns current position as value between 0 - 100 """
         assert self.position is not None
         range = self.max - self.min
         step = range/100
@@ -65,8 +77,8 @@ class servocontrol:
         return int(pos/step)
  
     def drive_to_raw( self, target ):
-        # 'target' parameter is raw pwm value as expected by pigpio library
-        # Idea for this function is to have a ramped speed-up and slow-down for servo actuation
+        """ 'target' parameter is raw pwm value as expected by pigpio library """
+        # Motivation for this function is to have a ramped speed-up and slow-down for servo actuation
         global pwm
         global MIN
         global MAX
@@ -88,9 +100,6 @@ class servocontrol:
             return
 
         while (delta > 0 and self.position < target) or (delta < 0 and self.position > target):
-#            if (delta > 0 and self.position >= target) or (delta < 0 and self.position <= target):
-#                break
-
             self.position += delta
             pwm.set_servo_pulsewidth( self.pin, self.position );
             time.sleep( delay/200000 )
@@ -102,7 +111,7 @@ class servocontrol:
                 delay += 1
 
     def drive_to( self, target ):
-        # 'target' parameter is a position value between 0 - 100
+        """ 'target' parameter is a position value between 0 - 100 """
         assert target >= 0 and target <= 100
         range = self.max - self.min
         step = range/100
