@@ -130,8 +130,6 @@ class servocontrol:
             elif delay < self.startdelay and abs(target-self.position) < decel:
                 delay += 1
 
-            print( str(self.position) + " <> " + str(delay)  )
-
     def drive_to( self, target ):
         """ Argument 'target' is a position value between 0 - 100 """
         assert target >= 0 and target <= 100
