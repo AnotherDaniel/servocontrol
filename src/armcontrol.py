@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import servocontrol as sc
-import time
+import threading
 import logging
 logger = logging.getLogger(__name__)
 
@@ -30,14 +30,31 @@ class armcontrol:
         for sc in self.servocontrols:
             if servo_name in sc:
                 sc[servo_name].drive_to( target )
-                pass
+                return
+
+    def drive_to_t( self, servo_name, target ):
+        """ Drive servo_name axis to position target (movement range value between 0-100) - threaded """
+        t = threading.Thread(target=self.drive_to, args=(servo_name, target, ))
+        t.start()
+        return t
 
     def drive_to_pos( self, position = {} ):
         """ Drive robot arm to position, individual axis targets provided by servodef-style position dictionary """
         for key, pos in position.items():
             for sc in self.servocontrols:
                 if key in sc:
-                    sc[key].drive_to( pos )
+                    self.drive_to( key, pos )
+
+    def drive_to_pos_t( self, position = {} ):
+        """ Drive robot arm to position, individual axis targets provided by servodef-style position dictionary - threaded """
+        threads = []
+        for key, pos in position.items():
+            for sc in self.servocontrols:
+                if key in sc:
+                    threads.append( self.drive_to_t( key, pos ) )
+
+        for t in threads:
+            t.join()
 
     def report_pos( self ):
         """ Print current robot arm axis positions to logger.info (movement range value between 0-100) """

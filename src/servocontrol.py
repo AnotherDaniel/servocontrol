@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
 #import pigpio as pigpio
-from tracemalloc import start
 import mockpig as pigpio
+import threading
 import time
 import logging
 logger = logging.getLogger(__name__)
@@ -29,8 +29,9 @@ class servocontrol:
     startdelay = STARTDELAY
     mindelay_cw = MINDELAY
     mindelay_ccw = MINDELAY
-    
     position = None
+
+    lock = threading.Lock()
  
     def __init__( self, name, pin, min, max, initial, startdelay=STARTDELAY, mindelay_cw=MINDELAY, mindelay_ccw=MINDELAY ):
         """ Create servo abstraction, providing the following properties:
@@ -116,19 +117,20 @@ class servocontrol:
         # delay is the current-loop-iteration delay between PWM actuations,
         delay = self.startdelay
 
-        while (delta > 0 and self.position < target) or (delta < 0 and self.position > target):
-            self.position += delta
-            pwm.set_servo_pulsewidth( self.pin, self.position )
-            time.sleep( delay/ALACRITY )
+        with self.lock:
+            while (delta > 0 and self.position < target) or (delta < 0 and self.position > target):
+                self.position += delta
+                pwm.set_servo_pulsewidth( self.pin, self.position )
+                time.sleep( delay/ALACRITY )
 
-            # decel is the number of loops (increments/decrements) needed to get from start/end-delay to minimum delay
-            decel = self.startdelay - max( delay, mindelay )
+                # decel is the number of loops (increments/decrements) needed to get from start/end-delay to minimum delay
+                decel = self.startdelay - max( delay, mindelay )
 
-            # abs(target-position) is the delta (number of loop iterations remaining) to target position
-            if delay > mindelay and abs(target-self.position) > decel:
-                delay -= 1
-            elif delay < self.startdelay and abs(target-self.position) < decel:
-                delay += 1
+                # abs(target-position) is the delta (number of loop iterations remaining) to target position
+                if delay > mindelay and abs(target-self.position) > decel:
+                    delay -= 1
+                elif delay < self.startdelay and abs(target-self.position) < decel:
+                    delay += 1
 
     def drive_to( self, target ):
         """ Argument 'target' is a position value between 0 - 100 """
