@@ -17,4 +17,5 @@ Ground-breaking features include:
 
 ## ToDos
 
-- add threading to armcontrol, so that multiple servos can be actuated in parallel
+- test this on actual robot
+- mocked runs appear quite slow - design, or bug?
