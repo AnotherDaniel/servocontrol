@@ -17,4 +17,4 @@ Ground-breaking features include:
 
 ## ToDos
 
- - strange pecking motion on shoulder axis, wtf?
+ - intermittently, motions are spasmically fast, or just wrong; soft real-time control capabilities (lack of) of the Raspi?

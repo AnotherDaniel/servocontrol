@@ -15,7 +15,7 @@ MAX = 2500
 # ALACRITY is a value that influences how these speeds are interpreted (higher value = faster movement )
 STARTDELAY = 100
 MINDELAY = 15
-ALACRITY = 20000
+ALACRITY = 20
 
 pwm = pigpio.pi()
 
@@ -110,28 +110,31 @@ class servocontrol:
 
         logging.debug( "[servocontrol] call to drive_to_raw( " + str(self.name) + ", " + str(target) + " )" )
 
-        decel = None
-        mindelay = None
-        delta = 0
-
-        # This is to address both right-turn and left-turn cases with one loop (below)
-        if target > self.position:
-            delta = 1
-            mindelay = self.mindelay_cw
-        elif target < self.position:
-            delta = -1
-            mindelay = self.mindelay_ccw
-        else:
-            return
-
-        # delay is the current-loop-iteration delay between PWM actuations,
-        delay = self.startdelay
-
         with self.lock:
+            decel = None
+            mindelay = None
+            delta = 0
+
+            # This is to address both right-turn and left-turn cases with one loop (below)
+            if target > self.position:
+                delta = 1
+                mindelay = self.mindelay_cw
+            elif target < self.position:
+                delta = -1
+                mindelay = self.mindelay_ccw
+            else:
+                return
+
+            # delay is the current-loop-iteration delay between PWM actuations,
+            delay = self.startdelay
+
+        
+            #pwm.set_PWM_dutycycle( self.pin, 1 )
+
             while (delta > 0 and self.position < target) or (delta < 0 and self.position > target):
                 self.position += delta
                 pwm.set_servo_pulsewidth( self.pin, self.position )
-                time.sleep( delay/ALACRITY )
+                time.sleep( delay/(ALACRITY*1000) )
 
                 # decel is the number of loops (increments/decrements) needed to get from start/end-delay to minimum delay
                 decel = self.startdelay - max( delay, mindelay )
@@ -142,7 +145,10 @@ class servocontrol:
                 elif delay < self.startdelay and abs(target-self.position) < decel:
                     delay += 1
 
-                #print( "<position> " + str(self.position) + "  -  <delay> " +str( delay ) )
+                print( "" + self.name + "  -  <position> " + str(self.position) + "  -  <delay> " +str( delay ) )
+
+            #pwm.set_PWM_dutycycle( self.pin, 0 )
+
 
     def drive_to( self, target ):
         """ Argument 'target' is a position value between 0 - 100 """
