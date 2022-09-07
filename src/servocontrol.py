@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
-#import pigpio as pigpio
-import mockpig as pigpio
+import pigpio as pigpio
+#import mockpig as pigpio
 import threading
 import time
 import logging
@@ -48,7 +48,7 @@ class servocontrol:
         # Sanity check - Raspberry Pi only has GPIO pins between 2 - 27 
         assert pin >= 2 and pin <= 27
         assert max > min
-        assert min <= initial and initial <= max
+        assert MIN <= initial and initial <= MAX
         assert mindelay_cw < startdelay and mindelay_ccw < startdelay
 
         self.name = name
