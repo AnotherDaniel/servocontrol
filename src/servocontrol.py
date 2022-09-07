@@ -21,7 +21,6 @@ pwm = pigpio.pi()
 
 class servocontrol:
     """ Encapsulate servo properties and pigpiod interaction for controlling RC-style servos """
-
     name = None
     pin = None
     min = MIN
@@ -44,7 +43,6 @@ class servocontrol:
             - mindelay_cw: max speed during servo actuation for clock-wise turns 
             - mindelay_ccw: max speed during servo actuation for counter-clock-wise turns
         """
-
         # Sanity check - Raspberry Pi only has GPIO pins between 2 - 27 
         assert pin >= 2 and pin <= 27
         assert max > min
@@ -66,7 +64,11 @@ class servocontrol:
         self.drive_to_raw( self.position )
 
     def __del__( self ):
+        pass
+
+    def release( self ):
         global pwm
+        assert pwm is not None
         pwm.set_PWM_dutycycle( self.pin, 0 )
         pwm.set_PWM_frequency( self.pin, 0 )
 
@@ -95,6 +97,7 @@ class servocontrol:
         global pwm
         global MIN
         global MAX
+        assert pwm is not None
         assert self.position >= MIN and self.position <= MAX
         assert target >= self.min and target <= self.max
 
@@ -131,6 +134,8 @@ class servocontrol:
                     delay -= 1
                 elif delay < self.startdelay and abs(target-self.position) < decel:
                     delay += 1
+
+                #print( "<position> " + str(self.position) )
 
     def drive_to( self, target ):
         """ Argument 'target' is a position value between 0 - 100 """

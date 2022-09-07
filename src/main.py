@@ -13,37 +13,46 @@ def main():
     arm.report_pos()
 
     # drive to pre-defined position
+    print( "arm to home" )
     arm.drive_to_pos_t( sd.pos_home )
     arm.report_pos()
 
-    axis = "hand"
+    axis = "elbow"
 
     time.sleep( 1 )
-    print( "to 0" )
     # drive one specific servo/axis
+    print( axis+" to 0" )
     arm.drive_to( axis, 0 )
     arm.report_pos()
 
     time.sleep( 1 )
-    print( "to 100" )
     # drive one specific servo/axis
+    print( axis+" to 100" )
     arm.drive_to( axis, 100 )
     arm.report_pos()
 
     time.sleep( 1 )
-    print( "to 50" )
     # drive one specific servo/axis
+    print( axis+" to 50" )
     arm.drive_to( axis, 0 )
     arm.report_pos()
 
     time.sleep( 1 )
-    print( "to somewhere" )
     # drive to manually defined target position
-    arm.drive_to_pos_t( { 'turn': 78, 'shoulder': 2, 'elbow':85, 'hand':67 } )
+    print( "arm to somewhere" )
+    arm.drive_to_pos_t( { 'turn': 0, 'shoulder': 90, 'elbow': 90, 'hand': 90 } )
     arm.report_pos()
+
+    time.sleep( 1 )
+    # drive to pre-defined position
+    print( "arm to home" )
+    arm.drive_to_pos_t( sd.pos_home )
+    arm.report_pos()
+
+    del arm
 
 
 if __name__ == '__main__':
     import logging.config
-    logging.basicConfig( level = logging.INFO )
+    logging.basicConfig( level = logging.DEBUG )
     main()   

@@ -18,8 +18,9 @@ class armcontrol:
                 self.add_servo( servo )
 
     def __del__( self ):
-        for servo in self.servocontrols:
-            del servo
+        for sc in self.servocontrols:
+            for servo in sc:
+                sc[servo].release()
 
     def add_servo( self, servo ):
         """ Add one servo as servodef-style servo dictionary """

@@ -17,12 +17,4 @@ Ground-breaking features include:
 
 ## ToDos
 
-- make initial positioning (on construction) also use ramp up/down actuation
-- look into pigpio exception on cleanup
-
-Exception ignored in: <function servocontrol.__del__ at 0xffff9faa9900>
-Traceback (most recent call last):
-  File "/home/ubuntu/workspace/servocontrol/src/servocontrol.py", line 70, in __del__
-  File "/usr/local/lib/python3.10/dist-packages/pigpio.py", line 1480, in set_PWM_dutycycle
-  File "/usr/local/lib/python3.10/dist-packages/pigpio.py", line 1025, in _pigpio_command
-AttributeError: 'NoneType' object has no attribute 'send'
+ - strange pecking motion on shoulder axis, wtf?
