@@ -58,33 +58,40 @@ class servocontrol:
         self.mindelay_cw = mindelay_cw
         self.mindelay_ccw = mindelay_ccw
 
+        logging.debug( "[servocontrol] call to __init__()" )
+
         global pwm
         pwm.set_mode( self.pin, pigpio.OUTPUT )
         pwm.set_PWM_frequency( self.pin, 50 )
         self.drive_to_raw( self.position )
 
     def __del__( self ):
+        logging.debug( "[servocontrol] call to __del__()" )
         pass
 
     def release( self ):
         global pwm
         assert pwm is not None
+        logging.debug( "[servocontrol] call to release()" )
         pwm.set_PWM_dutycycle( self.pin, 0 )
         pwm.set_PWM_frequency( self.pin, 0 )
 
     def get_name( self ):
         """ Name of servo/axis """
         assert self.name is not None
+        logging.debug( "[servocontrol] call to get_name()" )
         return self.name
 
     def get_position_raw( self ):
         """ Current position as raw PWM value as dealt with by pigpio library """
         assert self.position is not None
+        logging.debug( "[servocontrol] call to get_position_raw()" )
         return self.position
 
     def get_position( self ):
         """ Returns current position as value between 0 - 100 """
         assert self.position is not None
+        logging.debug( "[servocontrol] call to get_position()" )
         range = self.max - self.min
         step = range/100
         pos = self.position - self.min
@@ -101,7 +108,7 @@ class servocontrol:
         assert self.position >= MIN and self.position <= MAX
         assert target >= self.min and target <= self.max
 
-        logging.debug( "[servocontrol] call to drive_to( " + str(self.name) + ", " + str(target) + " )" )
+        logging.debug( "[servocontrol] call to drive_to_raw( " + str(self.name) + ", " + str(target) + " )" )
 
         decel = None
         mindelay = None
@@ -135,11 +142,12 @@ class servocontrol:
                 elif delay < self.startdelay and abs(target-self.position) < decel:
                     delay += 1
 
-                #print( "<position> " + str(self.position) )
+                #print( "<position> " + str(self.position) + "  -  <delay> " +str( delay ) )
 
     def drive_to( self, target ):
         """ Argument 'target' is a position value between 0 - 100 """
         assert target >= 0 and target <= 100
+        logging.debug( "[servocontrol] call to drive_to( " + str(self.name) + ", " + str(target) + " )" )
         range = self.max - self.min
         step = range/100
         delta = step*target

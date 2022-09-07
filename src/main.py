@@ -16,34 +16,31 @@ def main():
     print( "arm to home" )
     arm.drive_to_pos_t( sd.pos_home )
     arm.report_pos()
+    input( "Hit enter to continue" )
 
-    axis = "elbow"
+    # axis = "elbow"
 
-    time.sleep( 1 )
-    # drive one specific servo/axis
-    print( axis+" to 0" )
-    arm.drive_to( axis, 0 )
-    arm.report_pos()
+    # # drive one specific servo/axis
+    # print( axis+" to 0" )
+    # arm.drive_to( axis, 0 )
+    # arm.report_pos()
 
-    time.sleep( 1 )
-    # drive one specific servo/axis
-    print( axis+" to 100" )
-    arm.drive_to( axis, 100 )
-    arm.report_pos()
+    # # drive one specific servo/axis
+    # print( axis+" to 100" )
+    # arm.drive_to( axis, 100 )
+    # arm.report_pos()
 
-    time.sleep( 1 )
-    # drive one specific servo/axis
-    print( axis+" to 50" )
-    arm.drive_to( axis, 0 )
-    arm.report_pos()
+    # # drive one specific servo/axis
+    # print( axis+" to 50" )
+    # arm.drive_to( axis, 0 )
+    # arm.report_pos()
 
-    time.sleep( 1 )
     # drive to manually defined target position
     print( "arm to somewhere" )
     arm.drive_to_pos_t( { 'turn': 0, 'shoulder': 90, 'elbow': 90, 'hand': 90 } )
     arm.report_pos()
+    input( "Hit enter to continue" )
 
-    time.sleep( 1 )
     # drive to pre-defined position
     print( "arm to home" )
     arm.drive_to_pos_t( sd.pos_home )
