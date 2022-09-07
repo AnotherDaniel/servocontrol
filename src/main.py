@@ -18,24 +18,27 @@ def main():
     arm.report_pos()
     input( "Hit enter to continue" )
 
-    # axis = "elbow"
+    axis = "turn"
 
-    # # drive one specific servo/axis
-    # print( axis+" to 0" )
-    # arm.drive_to( axis, 0 )
-    # arm.report_pos()
+    # drive one specific servo/axis
+    print( axis+" to 0" )
+    arm.drive_to( axis, 0 )
+    arm.report_pos()
+    input( "Hit enter to continue" )
 
-    # # drive one specific servo/axis
-    # print( axis+" to 100" )
-    # arm.drive_to( axis, 100 )
-    # arm.report_pos()
+    # drive one specific servo/axis
+    print( axis+" to 100" )
+    arm.drive_to( axis, 100 )
+    arm.report_pos()
+    input( "Hit enter to continue" )
 
-    # # drive one specific servo/axis
-    # print( axis+" to 50" )
-    # arm.drive_to( axis, 0 )
-    # arm.report_pos()
+    # drive one specific servo/axis
+    print( axis+" to 50" )
+    arm.drive_to( axis, 50 )
+    arm.report_pos()
+    input( "Hit enter to continue" )
 
-    # drive to manually defined target position
+    ## drive to manually defined target position
     print( "arm to somewhere" )
     arm.drive_to_pos_t( { 'turn': 0, 'shoulder': 90, 'elbow': 90, 'hand': 90 } )
     arm.report_pos()
@@ -51,5 +54,5 @@ def main():
 
 if __name__ == '__main__':
     import logging.config
-    logging.basicConfig( level = logging.DEBUG )
+    logging.basicConfig( level = logging.INFO )
     main()   

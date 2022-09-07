@@ -13,8 +13,8 @@ MAX = 2500
 
 # Timing-related definions - STARTDELAY and MINDELAY influence movment start/end and max-speeds, 
 # ALACRITY is a value that influences how these speeds are interpreted (higher value = faster movement )
-STARTDELAY = 275
-MINDELAY = 50
+STARTDELAY = 100
+MINDELAY = 15
 ALACRITY = 20000
 
 pwm = pigpio.pi()
