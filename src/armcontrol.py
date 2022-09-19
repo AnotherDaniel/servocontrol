@@ -11,9 +11,13 @@ class armcontrol:
     # list of servocontrol references
     servocontrols = []
 
-    def __init__( self, servos = [] ):
+    def __init__( self, servos = None ):
         """ Add servo configs as list of servodef-style servo dictionaries """
         logging.debug( "[armcontrol] call to __init__()" )
+
+        if servos is None:
+            servos = []
+
         if len( servos ) > 0:
             for servo in servos:
                 self.add_servo( servo )
@@ -44,16 +48,22 @@ class armcontrol:
         t.start()
         return t
 
-    def drive_to_pos( self, position = {} ):
+    def drive_to_pos( self, position = None ):
         """ Drive robot arm to position, individual axis targets provided by servodef-style position dictionary """
+        if position is None:
+            return
+
         logging.debug( "[armcontrol] call to drive_to_pos()" )
         for key, pos in position.items():
             for sc in self.servocontrols:
                 if key in sc:
                     self.drive_to( key, pos )
 
-    def drive_to_pos_t( self, position = {} ):
+    def drive_to_pos_t( self, position = None ):
         """ Drive robot arm to position, individual axis targets provided by servodef-style position dictionary - threaded """
+        if position is None:
+            return
+
         logging.debug( "[armcontrol] call to drive_to_pos_t()" )
         threads = []
         for key, pos in position.items():

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
-import pigpio as pigpio
-#import mockpig as pigpio
+#import pigpio as pigpio
+import mockpig as pigpio
 import threading
 import time
 import logging
