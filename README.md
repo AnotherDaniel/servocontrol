@@ -17,4 +17,5 @@ Ground-breaking features include:
 
 ## ToDos
 
-- intermittently, motions are spasmically fast, or just wrong; soft real-time control capabilities (lack of) of the Raspi?
+- This looks not too bad at this point; stuff isn't working reliably but I think that is not due to the code at this point, more these stupid servos.
+- What are these last niggs about? Do stuff with cgroups on piopigd?

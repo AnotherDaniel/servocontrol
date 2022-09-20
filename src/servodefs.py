@@ -18,4 +18,4 @@ hand = { 'name': 'hand', 'pin': 20, 'min': 625, 'max': 1500, 'initial': 625, 'st
 
 """ Set of pre-defined standard positions """
 # home position - aligned with the initial-points of the main servos (above), useful as shutdown position to avoid big spams on init 
-pos_home = { 'turn': 50, 'shoulder': 0, 'elbow': 0, 'hand': 0 }
+pos_home = { 'turn': 50, 'shoulder': 10, 'elbow': 0, 'hand': 0 }

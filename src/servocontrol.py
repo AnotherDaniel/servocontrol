@@ -128,9 +128,6 @@ class servocontrol:
             # delay is the current-loop-iteration delay between PWM actuations,
             delay = self.startdelay
 
-        
-            #pwm.set_PWM_dutycycle( self.pin, 1 )
-
             while (delta > 0 and self.position < target) or (delta < 0 and self.position > target):
                 self.position += delta
                 pwm.set_servo_pulsewidth( self.pin, self.position )
@@ -145,10 +142,7 @@ class servocontrol:
                 elif delay < self.startdelay and abs(target-self.position) < decel:
                     delay += 1
 
-                print( "" + self.name + "  -  <position> " + str(self.position) + "  -  <delay> " +str( delay ) )
-
-            #pwm.set_PWM_dutycycle( self.pin, 0 )
-
+#                print( "" + self.name + "  -  <position> " + str(self.position) + "  -  <delay> " +str( delay ) )
 
     def drive_to( self, target ):
         """ Argument 'target' is a position value between 0 - 100 """

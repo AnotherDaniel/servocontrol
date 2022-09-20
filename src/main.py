@@ -39,27 +39,26 @@ def main():
     # arm.report_pos()
     # input( "Hit enter to continue" )
 
-    ## drive to manually defined target position
-    print( "arm to somewhere" )
-    arm.drive_to_pos( { 'turn': 50, 'shoulder': 5, 'elbow': 25, 'hand': 0 } )
+    # drive to manually defined target position
+    print( "arm to 0es" )
+    arm.drive_to_pos( { 'turn': 0, 'shoulder': 0, 'elbow': 0, 'hand': 0 } )
     arm.report_pos()
-#    input( "Hit enter to continue" )
-    time.sleep( 1 )
+    input( "Hit enter to continue" )
+#    time.sleep( 1 )
 
+    # drive to manually defined target position
+    print( "arm to 100s" )
+    arm.drive_to_pos( { 'turn': 100, 'shoulder': 100, 'elbow': 100, 'hand': 100 } )
+    arm.report_pos()
+    input( "Hit enter to continue" )
+#    time.sleep( 1 )
 
-#     ## drive to manually defined target position
-#     print( "arm to somewhere else" )
-#     arm.drive_to_pos( { 'turn': 50, 'shoulder': 80, 'elbow': 50, 'hand': 0 } )
-#     arm.report_pos()
-# #    input( "Hit enter to continue" )
-#     time.sleep( 1 )
-
-#     ## drive to manually defined target position
-#     print( "arm to somewhere else again" )
-#     arm.drive_to_pos( { 'turn': 50, 'shoulder': 5, 'elbow': 75, 'hand': 0 } )
-#     arm.report_pos()
-# #    input( "Hit enter to continue" )
-#     time.sleep( 1 )
+    # drive to manually defined target position
+    print( "arm to somewhere else" )
+    arm.drive_to_pos( { 'turn': 33, 'shoulder': 75, 'elbow': 17, 'hand': 5 } )
+    arm.report_pos()
+    input( "Hit enter to continue" )
+#    time.sleep( 1 )
 
     # drive to pre-defined position
     print( "arm to home" )
