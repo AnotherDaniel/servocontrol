@@ -17,5 +17,6 @@ Ground-breaking features include:
 
 ## ToDos
 
+- ATN! There is a movement restriction dependency between shoulder and elbow in the robot design - this needs to go into the control model!
 - This looks not too bad at this point; stuff isn't working reliably but I think that is not due to the code at this point, more these stupid servos.
 - What are these last niggs about? Do stuff with cgroups on piopigd?
