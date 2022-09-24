@@ -9,6 +9,7 @@ Ground-breaking features include:
 - separated-out servo properties definition
 - mechanism for ramp-up and slow-down of servo actuation when driving to new position
 - servo position range abstraction (can use raw setpoint or 0-100 position range)
+- ability to define axis movement restriction dependencies ("this axis can only go to that point if that other axis is at least at that point")
 - pre-defined robot arm positions
 
 &nbsp;
@@ -17,6 +18,5 @@ Ground-breaking features include:
 
 ## ToDos
 
-- ATN! There is a movement restriction dependency between shoulder and elbow in the robot design - this needs to go into the control model!
-- This looks not too bad at this point; stuff isn't working reliably but I think that is not due to the code at this point, more these stupid servos.
-- What are these last niggs about? Do stuff with cgroups on piopigd?
+- measure movement restriction ranges on real arm, test related code irl
+- maybe add interactive arm control loop, where arm and target positions can be entered via keyboard?

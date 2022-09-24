@@ -10,6 +10,9 @@ arm = None
 def main():
     global arm
     arm = ac.armcontrol( [ sd.turn, sd.shoulder, sd.elbow, sd.hand ] )
+    arm.add_restriction( sd.elbow_shoulder1 )
+    arm.add_restriction( sd.elbow_shoulder2 )
+
     arm.report_pos()
 
     # drive to pre-defined position
@@ -41,14 +44,14 @@ def main():
 
     # drive to manually defined target position
     print( "arm to 0es" )
-    arm.drive_to_pos( { 'turn': 0, 'shoulder': 0, 'elbow': 0, 'hand': 0 } )
+    arm.drive_to_pos( { 'turn': 0, 'shoulder': 0, 'elbow': 10, 'hand': 0 } )
     arm.report_pos()
     input( "Hit enter to continue" )
 #    time.sleep( 1 )
 
     # drive to manually defined target position
     print( "arm to 100s" )
-    arm.drive_to_pos( { 'turn': 100, 'shoulder': 100, 'elbow': 100, 'hand': 100 } )
+    arm.drive_to_pos( { 'turn': 100, 'shoulder': 80, 'elbow': 100, 'hand': 100 } )
     arm.report_pos()
     input( "Hit enter to continue" )
 #    time.sleep( 1 )
@@ -70,5 +73,5 @@ def main():
 
 if __name__ == '__main__':
     import logging.config
-    logging.basicConfig( level = logging.WARN )
+    logging.basicConfig( level = logging.INFO )
     main()   

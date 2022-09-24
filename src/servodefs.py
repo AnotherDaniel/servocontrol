@@ -15,6 +15,14 @@ shoulder = { 'name': 'shoulder', 'pin': 18, 'min': 800, 'max': 1400, 'initial': 
 elbow = { 'name': 'elbow', 'pin': 19, 'min': 500, 'max': 1500, 'initial': 500, 'startdelay': 110, 'mindelay_cw': 25, 'mindelay_ccw': 40 }
 hand = { 'name': 'hand', 'pin': 20, 'min': 625, 'max': 1500, 'initial': 625, 'startdelay': 75, 'mindelay_cw': 15, 'mindelay_ccw': 15 }
 
+""" If there exist movement-range dependencies between different axes, that can be modelled as follows:
+        axisX_axisY = { 'axisX': ['<', 30, 'axisY', '<', 20 ] }
+    This is interpreted as "axisY can only go lesser than 30 if axisY is lesser than 20".
+    Setpoints within the restricted areas are interpolated linearly, i.e. the above example would allow axisX moving to 15 if axisY is at or below 10.
+    Allowed syntax: valid axis names as per arm configuration, '<' or '>' for movement range restriction boundaries (< means "0 to value", > means "value to 100").
+"""
+elbow_shoulder1 = { 'elbow': ['<', 30, 'shoulder', '<', 20 ] }
+elbow_shoulder2 = { 'elbow': ['>', 80, 'shoulder', '>', 70 ] }
 
 """ Set of pre-defined standard positions """
 # home position - aligned with the initial-points of the main servos (above), useful as shutdown position to avoid big spams on init 
