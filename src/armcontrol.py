@@ -1,8 +1,8 @@
 #!/usr/bin/python3
-from inspect import classify_class_attrs
 import servocontrol as sc
 import threading
 import logging
+from util import log_info
 logger = logging.getLogger(__name__)
 
 class armcontrol:
@@ -43,6 +43,7 @@ class armcontrol:
         logging.debug( "[armcontrol] call to add_restriction()" )
         self.restrictions.append( restriction )
 
+    @log_info
     def calc_restriction( self, target, restriction ):
         """ Calculate movement restriction based on input target and restriction """
         logging.debug( "[armcontrol] call to calc_restriction()" )
